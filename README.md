@@ -52,7 +52,7 @@
 
 ИСПОЛЬЗОВАНИЕ:
 ```php
-    [[!allTvFields?     
+    [[!showTvList?     
        &excludeTv = `1,2` 
        &includeTv = `4,3` 
        &tplWrapper = `tpl.fieldsWrapper`
