@@ -30,6 +30,11 @@
  * &includeCat - список id необходимых категорий через запятую (категории и её поля)
  * &excludeCat - список  id категорий через запятую, которые НЕ надо выводить (категории и её поля)
  * 
+ * &getAllName - указывает что необходимо вывести ВСЕ имена(!только именна) TV полей, вне зависимости от ID или Parents
+ *  - это необходимо для передачи списка TV в другие сниппеты, например в mFilter2
+ * При указании этого параметра доступен только плейсхолдер [[+name]] и 2 чанка tplRow и tplRowLast
+ * При указании этого параметра работает только дополнительный параметр includeCat. Остальные параметры не работают.
+ * 
  * НЕ ПОДДЕРЖИВАЕТ INLINE чанки 
  *
  * ИСПОЛЬЗОВАНИЕ:
@@ -65,6 +70,45 @@ if (file_exists(MODX_CORE_PATH . 'components/pdotools')) {
 $outputRow = '';
 $outputCat = '';
 $tvs = array(); 
+
+
+if (!empty($getAllName)) {
+    
+    if($includeCat){
+        $includeCat = implode(",", $includeCat);
+        $tvs = $modx->getCollection('modTemplateVar',array(
+           'category' => 'IN ('.$includeCat.')'
+        )
+    );
+        
+    }
+    else{
+        $tvs = $modx->getCollection('modTemplateVar');
+    }
+    
+    $total = count($tvs);
+    $i = 1; 
+    
+    foreach($tvs as $tv){ 
+        
+        if(($total == $i ) AND !empty($tplRowLast)){ $tplRow = $tplRowLast; }
+        
+        if($pdoTools){ 
+            $outputRow .= $pdoTools->getChunk( $tplRow , array(
+                'name' => $tv->get('name')
+            ));
+        }
+        else{
+            $outputRow .= $modx->getChunk( $tplRow , array( 
+                'name' => $tv->get('name')
+            )); 
+        } 
+        
+        $i++;
+    }
+ 
+    return $outputRow;
+} 
 
 $tv_query = $modx->newQuery('modTemplateVarResource');
 $tv_query->leftJoin('modTemplateVar','modTemplateVar',array("modTemplateVar.id = modTemplateVarResource.tmplvarid"));
