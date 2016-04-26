@@ -33,7 +33,6 @@
  * &getAllName - указывает что необходимо вывести ВСЕ имена(!только именна) TV полей, вне зависимости от ID или Parents
  *  - это необходимо для передачи списка TV в другие сниппеты, например в mFilter2
  * При указании этого параметра доступен только плейсхолдер [[+name]] и 2 чанка tplRow и tplRowLast
- * При указании этого параметра работает только дополнительный параметр includeCat. Остальные параметры не работают.
  * 
  * INLINE чанки поддерживает только при наличии pdoTools
  *
@@ -59,17 +58,14 @@
  *
  */
 
-
-// properties
 if (empty($tplWrapper)) {$tplWrapper = '@INLINE  <ul>[[+fieldsResult]]</ul>';}
 if (empty($tplCat)) {$tplCat = '@INLINE  <li><h4>[[+category]]</h4> <ul>[[+rows]]</ul></li>';}
 if (empty($tplRow)) {$tplRow = '@INLINE  <li>[[+name]]: [[+caption]] - [[+value]]</li>';}
 if (!empty($excludeTv)) { $excludeTv = explode(",", $excludeTv); } 
 if (!empty($includeTv)) { $includeTv = explode(",", $includeTv); } 
-if (!empty($excludeCat)) { $excludeCat = explode(",", $excludeCat); }  
-if (!empty($includeCat)) { $includeCat = explode(",", $includeCat); } 
+if (!empty($excludeCat)) { $excludeCat = explode(",", $excludeCat); } 
+if (!empty($includeCat)) { $includeCat = explode(",", $includeCat); }
 if (empty($id)) { $id = $modx->resource->get('id'); } 
-
 
 // подключаем pdoTools для работы INLINE чанков 
 if (file_exists(MODX_CORE_PATH . 'components/pdotools')) {
@@ -80,21 +76,22 @@ $outputRow = '';
 $outputCat = '';
 $tvs = array(); 
 
-
 if (!empty($getAllName)) {
     
-    if($includeCat){
-        $includeCat = implode(",", $includeCat);
-        $tvs = $modx->getCollection('modTemplateVar',array(
-           'category' => 'IN ('.$includeCat.')'
-        )
-    );
-        
-    }
+    $tv_query = $modx->newQuery('modTemplateVar');
+    if($excludeTv)  { $tv_query->where(array( 'modTemplateVar.id:NOT IN'=> $excludeTv )); }
+    if($excludeCat)  { $tv_query->where(array( 'modTemplateVar.modTemplateVar.category:NOT IN'=> $excludeCat )); }
+    if( $includeTv)  { $tv_query->where(array( 'modTemplateVar.id:IN' => $includeTv )); }
+    
+    if( $includeCat == 0 ) { 
+        $tv_query->where(array( 'modTemplateVar.category:IN' => array('0') )); 
+    } 
     else{
-        $tvs = $modx->getCollection('modTemplateVar');
+        if( count($includeCat)>0) { $tv_query->where(array( 'modTemplateVar.category:IN' => $includeCat )); }
     }
     
+    $tvs = $modx->getCollection('modTemplateVar',$tv_query);
+     
     $total = count($tvs);
     $i = 1; 
     
