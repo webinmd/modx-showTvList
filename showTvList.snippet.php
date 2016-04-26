@@ -47,6 +47,15 @@
        &tplRow = `tpl.fieldsRow`
     ]]
     
+    Пример 2  (с параметром getAllName)
+    [[!showTvList? 
+    &getAllName=`1` 
+    &includeCat=`6,8`
+    &tplRow=`@INLINE  tv|[[+name]],`
+    &tplRowLast=`@INLINE  tv|[[+name]]`
+    ]]
+
+    
  *
  */
 
