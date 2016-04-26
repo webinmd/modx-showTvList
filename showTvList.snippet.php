@@ -47,7 +47,7 @@
        &tplRow = `tpl.fieldsRow`
     ]]
     
-    Пример 2  (с параметром getAllName)
+* Пример 2  (с параметром getAllName)
     [[!showTvList? 
     &getAllName=`1` 
     &includeCat=`6,8`
