@@ -81,13 +81,13 @@ if (!empty($getAllName)) {
     $tv_query = $modx->newQuery('modTemplateVar');
     if($excludeTv)  { $tv_query->where(array( 'modTemplateVar.id:NOT IN'=> $excludeTv )); }
     if($excludeCat)  { $tv_query->where(array( 'modTemplateVar.modTemplateVar.category:NOT IN'=> $excludeCat )); }
-    if( $includeTv)  { $tv_query->where(array( 'modTemplateVar.id:IN' => $includeTv )); }
+    if($includeTv[0] > 0)  { $tv_query->where(array( 'modTemplateVar.id:IN' => $includeTv )); }
     
     if( $includeCat == 0 ) { 
         $tv_query->where(array( 'modTemplateVar.category:IN' => array('0') )); 
     } 
     else{
-        if( count($includeCat)>0) { $tv_query->where(array( 'modTemplateVar.category:IN' => $includeCat )); }
+        if( count($includeCat)>0 ) { $tv_query->where(array( 'modTemplateVar.category:IN' => $includeCat )); }
     }
     
     $tvs = $modx->getCollection('modTemplateVar',$tv_query);
