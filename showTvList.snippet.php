@@ -274,13 +274,13 @@ if (!empty($getAllName)) {
         
         if($pdoTools){ 
             $outputRow .= $pdoTools->getChunk( $tplRow , array(
-                'name' => $tv->get('name'),
+                'name' => strtolower($tv->get('name')),
                 'nameTranslit' => $nameTranslit
             ));
         }
         else{
             $outputRow .= $modx->getChunk( $tplRow , array( 
-                'name' => $tv->get('name'),
+                'name' =>strtolower($tv->get('name')),
                 'nameTranslit' => $nameTranslit
             )); 
         } 
@@ -327,7 +327,10 @@ foreach($arrTvs as $category=>$fields){
     $outputRow = '';
     
     foreach($fields as $field){ 
-        
+              
+        if($replace){
+            $field['value'] = str_replace("||", ", ", $field['value']);
+        }
         if($pdoTools){ 
             $outputRow .= $pdoTools->getChunk( $tplRow , array(
                 'id' => $field['id'],
