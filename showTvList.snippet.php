@@ -57,8 +57,7 @@
     
  *
  */
-
-<?php
+ 
 /**
  * showTvList
  *
@@ -118,8 +117,7 @@
     
  *
  */
- 
-<?php
+  
 /**
  * showTvList
  *
